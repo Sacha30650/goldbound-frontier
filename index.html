@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1718" />
+  <meta name="description" content="Goldbound Frontier — jeu de prospection et de construction de village." />
+  <link rel="icon" href="assets/frontier-hero.webp" type="image/webp" />
+  <title>Goldbound Frontier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="profile-chip" id="profileBtn" aria-label="Ouvrir le profil">
+        <span class="avatar">⛏</span>
+        <span><small>PROSPECTEUR</small><strong>Niv. <b id="level">1</b></strong></span>
+        <span class="xp-ring" id="xpRing"></span>
+      </button>
+      <div class="resource-strip" aria-label="Ressources">
+        <button class="resource" data-jump="shop"><span class="coin-icon">●</span><span><small>PIÈCES</small><b id="coins">350</b></span><i>+</i></button>
+        <div class="resource"><span class="gold-icon">◆</span><span><small>OR</small><b id="gold">0</b></span></div>
+        <button class="resource premium" data-jump="shop"><span class="diamond-icon">◆</span><span><small>DIAMANTS</small><b id="diamonds">18</b></span><i>+</i></button>
+      </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="Réglages">⚙</button>
+    </header>
+
+    <main>
+      <section class="view active" id="huntView" data-view="hunt">
+        <div class="hero-stage">
+          <img src="assets/frontier-hero.webp" alt="Prospecteur dans une vallée de la frontière moderne" class="hero-bg" />
+          <div class="hero-shade"></div>
+          <div class="location-chip"><span>RIVIÈRE ROUGE</span><small>SECTEUR 01 · RICHE EN ARGENT</small></div>
+          <button class="daily-chip" id="dailyBtn"><span>🎁</span><span><strong>CADEAU DU JOUR</strong><small id="dailyStatus">Disponible</small></span></button>
+          <div class="streak-card"><span>🔥</span><div><small>SÉRIE</small><b><span id="streak">0</span>/10</b></div></div>
+
+          <div class="detector-panel glass">
+            <div class="panel-heading">
+              <div><small>DÉTECTEUR <span id="detectorLevel">MK-I</span></small><h1 id="scanTitle">BALAYEZ LE TERRAIN</h1></div>
+              <div class="energy-pill"><span>⚡</span><b id="energy">100</b><small>/<span id="maxEnergy">100</span></small></div>
+            </div>
+
+            <div class="scanner" id="scanner" aria-label="Scanner de métaux">
+              <div class="scanner-grid"></div>
+              <div class="signal-zone" id="signalZone"></div>
+              <div class="scan-wave" id="scanWave"></div>
+              <div class="needle" id="needle"><span></span></div>
+              <div class="scanner-labels"><span>FAIBLE</span><span>SIGNAL</span><span>FORT</span></div>
+            </div>
+
+            <div class="last-find" id="lastFind"><span class="find-icon">✦</span><div><small>DERNIÈRE TROUVAILLE</small><strong>Le terrain vous attend</strong></div></div>
+            <button class="primary-action" id="scanBtn"><span class="button-glow"></span><span id="scanBtnText">LANCER LE SCAN</span><small id="scanCost">⚡ 5 ÉNERGIE</small></button>
+            <p class="scan-tip" id="scanTip">Lancez le scan, puis creusez quand l’aiguille traverse la zone lumineuse.</p>
+          </div>
+        </div>
+
+        <aside class="side-stack">
+          <section class="card mission-card">
+            <div class="card-title"><span><small>MISSION ACTIVE</small><strong id="missionTitle">Premières traces</strong></span><span class="badge">+2 💎</span></div>
+            <p id="missionText">Trouvez 5 gisements</p>
+            <div class="progress"><i id="missionProgress"></i></div>
+            <div class="progress-meta"><span id="missionCount">0 / 5</span><button id="claimMission" disabled>RÉCLAMER</button></div>
+          </section>
+
+          <section class="card ad-card">
+            <div class="ad-visual"><span>▶</span><i>RÉCOMPENSE</i></div>
+            <div class="ad-copy"><small>COUP DE POUCE</small><strong>Fièvre de l’or ×2</strong><p>Doublez tous vos gains pendant 3 minutes.</p></div>
+            <button class="watch-ad" data-ad="boost"><span>▶ REGARDER</span><small>GRATUIT</small></button>
+          </section>
+
+          <section class="card production-card">
+            <div><small>REVENU DU VILLAGE</small><strong><span id="income">1</span> <em>pièce/s</em></strong></div>
+            <span class="live-dot">EN DIRECT</span>
+          </section>
+        </aside>
+      </section>
+
+      <section class="view" id="villageView" data-view="village">
+        <div class="page-hero village-hero">
+          <img src="assets/village.webp" alt="Village minier moderne dans un canyon" />
+          <div class="page-overlay"></div>
+          <div class="page-intro"><small>VOTRE COLONIE</small><h1>FRONTIER CREEK</h1><p>Transformez un camp poussiéreux en capitale minière autonome.</p><div class="town-level"><span>PROSPÉRITÉ</span><div class="progress"><i id="townProgress"></i></div><b id="prosperity">1</b></div></div>
+        </div>
+        <div class="content-wrap">
+          <div class="section-heading"><div><small>PLAN DE DÉVELOPPEMENT</small><h2>Bâtiments</h2></div><span id="buildingBonus">Bonus global +0%</span></div>
+          <div class="building-grid" id="buildingGrid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="shopView" data-view="shop">
+        <div class="page-hero shop-hero">
+          <img src="assets/vault.webp" alt="Mine technologique et diamant rare" />
+          <div class="page-overlay"></div>
+          <div class="page-intro"><small>COMPTOIR PREMIUM</small><h1>PRENEZ DE L’AVANCE</h1><p>Équipez-vous mieux. Creusez plus vite. Dominez la frontière.</p></div>
+        </div>
+        <div class="content-wrap shop-content">
+          <div class="featured-offer">
+            <div class="offer-ribbon">-70% · OFFRE DE LANCEMENT</div>
+            <div class="offer-art"><span>💎</span><i>×500</i></div>
+            <div class="offer-copy"><small>PACK DU PIONNIER</small><h2>Un départ en or</h2><ul><li>500 diamants</li><li>Production ×2 permanente</li><li>Détecteur chromé exclusif</li></ul></div>
+            <button class="buy-real" data-pack="starter"><small>UNE SEULE FOIS</small><strong>2,99 €</strong></button>
+          </div>
+
+          <div class="shop-columns">
+            <section><div class="section-heading"><div><small>ATELIER</small><h2>Améliorations</h2></div></div><div class="upgrade-list" id="upgradeList"></div></section>
+            <section><div class="section-heading"><div><small>BOUTIQUE</small><h2>Diamants</h2></div></div><div class="diamond-grid">
+              <button class="diamond-pack" data-pack="small"><span>💎</span><b>100</b><small>0,99 €</small></button>
+              <button class="diamond-pack best" data-pack="medium"><i>POPULAIRE</i><span>💎</span><b>650</b><small>4,99 €</small></button>
+              <button class="diamond-pack" data-pack="large"><span>💎</span><b>3 500</b><small>19,99 €</small></button>
+            </div>
+            <div class="free-rewards"><div><span>⚡</span><p><strong>Énergie instantanée</strong><small>+50 énergie</small></p><button class="watch-ad" data-ad="energy">▶ PUB</button></div><div><span>💎</span><p><strong>Coffre sponsorisé</strong><small>+3 diamants</small></p><button class="watch-ad" data-ad="diamonds">▶ PUB</button></div></div></section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <button class="nav-item active" data-target="hunt"><span>⌖</span><b>PROSPECTER</b></button>
+      <button class="nav-item" data-target="village"><span>▥</span><b>VILLAGE</b><i id="villageNotif">1</i></button>
+      <button class="nav-item premium-nav" data-target="shop"><span>◆</span><b>BOUTIQUE</b></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="adModal" hidden>
+    <div class="modal ad-modal">
+      <button class="modal-close" id="closeAd">×</button>
+      <div class="sponsor-screen"><span>GOLDRUSH+</span><div class="ad-timer" id="adTimer">5</div><small>CONTENU SPONSORISÉ · DÉMO</small></div>
+      <h2 id="adRewardTitle">Votre récompense arrive…</h2>
+      <p>Cette preview simule le visionnage d’une publicité récompensée.</p>
+      <button class="primary-action" id="claimAd" disabled>VEUILLEZ PATIENTER</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="rewardModal" hidden>
+    <div class="modal reward-modal"><span class="reward-burst">✦</span><small>RÉCOMPENSE DU JOUR</small><h2>Le convoi est arrivé !</h2><div class="reward-row"><span>● <b>250</b><small>PIÈCES</small></span><span>◆ <b>3</b><small>DIAMANTS</small></span></div><button class="primary-action" id="claimDaily">TOUT RÉCUPÉRER</button></div>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal settings-modal"><button class="modal-close" data-close-modal>×</button><small>OPTIONS</small><h2>Réglages</h2><div class="setting-row"><span>Son & vibrations</span><button class="toggle on" id="soundToggle"><i></i></button></div><div class="setting-row"><span>Réduire les animations</span><button class="toggle" id="motionToggle"><i></i></button></div><button class="danger-btn" id="resetSave">RÉINITIALISER LA PARTIE</button><p class="legal">Prototype jouable. Les achats et publicités sont simulés, aucun paiement réel n’est effectué.</p></div>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script src="game.js"></script>
+</body>
+</html>

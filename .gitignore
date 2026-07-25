@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+*.log
+assets/contact-sheet.jpg
+assets/frontier-hero.png
+assets/river.png
+assets/vault.png
+assets/village.png
+mobile-preview.png
+desktop-preview.png
+test-results.json
