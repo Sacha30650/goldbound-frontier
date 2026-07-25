@@ -80,6 +80,16 @@
   let adInterval = null;
   let lastPassiveSave = now();
 
+  const nativePlugin = name => window.Capacitor?.Plugins?.[name];
+  function haptic(style = 'LIGHT') {
+    if (!state.sound) return;
+    nativePlugin('Haptics')?.impact({ style }).catch(() => {});
+  }
+  function nativeNotice(type = 'SUCCESS') {
+    if (!state.sound) return;
+    nativePlugin('Haptics')?.notification({ type }).catch(() => {});
+  }
+
   const format = value => {
     const n = Math.max(0, Number(value) || 0);
     if (n >= 1e9) return `${(n / 1e9).toFixed(n >= 1e10 ? 0 : 1)}Md`;
@@ -200,6 +210,7 @@
   }
 
   function showView(target) {
+    haptic('LIGHT');
     $$('.view').forEach(v => v.classList.toggle('active', v.dataset.view === target));
     $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.target === target));
     window.scrollTo({ top: 0, behavior: state.reducedMotion ? 'auto' : 'smooth' });
@@ -212,6 +223,7 @@
       return;
     }
     state.energy -= 5;
+    haptic('MEDIUM');
     scanning = true;
     scanStart = performance.now();
     const margin = .13;
@@ -277,6 +289,7 @@
       label = `Diamant brut +${amount} · ${format(coinGain)} pièces`;
       type = 'diamond';
       celebrate('◆ DIAMANT ULTRA RARE !', label);
+      nativeNotice('SUCCESS');
     } else if (roll < diamondChance + goldChance) {
       const amount = Math.max(1, Math.round((1 + Math.random() * 4) * mult));
       state.gold += amount;
@@ -300,6 +313,7 @@
     $('#scanTitle').textContent = `${quality} · GISEMENT TROUVÉ`;
     floatReward(`+${format(coinGain)} ●`);
     if (quality === 'PARFAIT') toast('Signal parfait', label, 'reward');
+    haptic(quality === 'PARFAIT' ? 'HEAVY' : 'MEDIUM');
     save();
     render();
   }
@@ -311,6 +325,7 @@
     if (state.coins < cost) return toast('Fonds insuffisants', `Il manque ${format(cost - state.coins)} pièces.`);
     state.coins -= cost;
     state.buildings[id]++;
+    nativeNotice('SUCCESS');
     grantXp(35 + state.buildings[id] * 5);
     toast(`${def.name} amélioré`, `Revenu +${format(def.income)} pièce/s`, 'reward');
     save(); render();
@@ -323,6 +338,7 @@
     if (state[def.currency] < cost) return toast('Ressource insuffisante', 'Continuez à prospecter.');
     state[def.currency] -= cost;
     state.upgrades[id]++;
+    nativeNotice('SUCCESS');
     if (id === 'battery') state.energy = Math.min(maxEnergy(), state.energy + 10);
     toast(`${def.name} amélioré`, `Niveau ${state.upgrades[id]} installé`, 'reward');
     save(); render();
@@ -485,13 +501,34 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
   }
 
+  function setupNativeShell() {
+    const isNative = window.Capacitor?.isNativePlatform?.() === true;
+    if (!isNative) return;
+    document.documentElement.classList.add('native-app');
+    nativePlugin('StatusBar')?.setStyle({ style: 'LIGHT' }).catch(() => {});
+    nativePlugin('StatusBar')?.setBackgroundColor({ color: '#081214' }).catch(() => {});
+    nativePlugin('SplashScreen')?.hide().catch(() => {});
+    nativePlugin('App')?.addListener('backButton', () => {
+      const current = $('.nav-item.active')?.dataset.target;
+      const openModal = $$('.modal-backdrop').find(modal => !modal.hidden);
+      if (openModal) {
+        openModal.hidden = true;
+      } else if (current !== 'hunt') {
+        showView('hunt');
+      } else {
+        nativePlugin('App')?.minimizeApp().catch(() => {});
+      }
+    });
+  }
+
   applyOfflineProgress();
   bind();
   render();
+  setupNativeShell();
   setInterval(tick, 1000);
   save();
 
-  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !window.Capacitor?.isNativePlatform?.()) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 })();

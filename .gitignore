@@ -1,4 +1,6 @@
 node_modules/
+dist/
+icons/
 .DS_Store
 *.log
 assets/contact-sheet.jpg

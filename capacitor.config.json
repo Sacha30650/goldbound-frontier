@@ -1,0 +1,32 @@
+{
+  "appId": "com.goldbound.frontier",
+  "appName": "Goldbound Frontier",
+  "webDir": "dist",
+  "backgroundColor": "#081214",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#081214"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#081214",
+    "preferredContentMode": "mobile"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#081214",
+      "overlaysWebView": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 1800,
+      "launchAutoHide": true,
+      "backgroundColor": "#081214",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    }
+  }
+}

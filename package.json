@@ -1,0 +1,26 @@
+{
+  "name": "goldbound-frontier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jeu mobile natif iOS/Android de prospection d'or et de construction de village",
+  "scripts": {
+    "build": "node scripts/build-mobile.mjs",
+    "sync": "npm run build && cap sync",
+    "android": "npm run sync && cap open android",
+    "ios": "npm run sync && cap open ios",
+    "test:e2e": "/usr/local/lib/hermes-agent/venv/bin/python e2e_test.py"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.4.2",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/ios": "^8.4.2",
+    "@capacitor/splash-screen": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.4.2"
+  }
+}

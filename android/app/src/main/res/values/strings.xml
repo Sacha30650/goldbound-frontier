@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Goldbound Frontier</string>
+    <string name="title_activity_main">Goldbound Frontier</string>
+    <string name="package_name">com.goldbound.frontier</string>
+    <string name="custom_url_scheme">com.goldbound.frontier</string>
+</resources>

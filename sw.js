@@ -1,4 +1,4 @@
-const CACHE = 'goldbound-v2';
+const CACHE = 'goldbound-v3';
 const ASSETS = [
   './', './index.html', './styles.css', './game.js', './manifest.webmanifest',
   './assets/frontier-hero.webp', './assets/village.webp', './assets/river.webp', './assets/vault.webp',
